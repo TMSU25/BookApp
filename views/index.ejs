@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Management System</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <nav>
+    <a href="/">Home</a>
+    <a href="/books/manage">Manage Books</a>
+  </nav>
+<div class="welcome">
+  <h1>Welcome to the Book Shop</h1>
+  <h2>Books List</h2>
+</div>
+  <!-- Book List Display (Card Format) -->
+  <div class="book-list">
+    <% books.forEach(book => { %>
+      <div class="book-card">
+        <h3><%= book.title %></h3>
+        <p><strong>Author:</strong> <%= book.author %></p>
+      </div>
+    <% }) %>
+  </div>
+
+</body>
+</html>
