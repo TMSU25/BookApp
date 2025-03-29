@@ -24,29 +24,17 @@ const saveBooks = (books) => {
 };
 
 // Home Page (Display Books)
-// router.get("/", (req, res) => {
-//   const books = getBooks(); // Get the books data
-//   const editId = req.query.edit;
-//   const bookToEdit = books.find(book => book.id == editId);
-
-//   res.render("books", { books: books, book: bookToEdit || {} });
-// });
-
-// Home Page (Display Books)
 router.get("/", (req, res) => {
   const books = getBooks(); // Fetch latest book data
   res.render("index", { books }); // Render index.ejs with updated books list
 });
 
-
-// new line
 router.get("/manage", (req, res) => {
   const books = getBooks();
   const editId = req.query.edit;
   const bookToEdit = books.find(book => book.id == editId);
   res.render("books", { books: books, book: bookToEdit || {} });
 });
-
 
 // Add or Update Book (Handle Add or Update)
 router.post("/", (req, res) => {
