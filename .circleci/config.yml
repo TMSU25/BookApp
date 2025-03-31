@@ -27,6 +27,9 @@ jobs:
       - run:
           name: Install dependencies
           command: npm install
+      - run:
+          name: Run tests with Jest
+          command: npm test
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
