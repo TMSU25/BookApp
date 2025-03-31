@@ -1,3 +1,8 @@
-.git/
-privatekey.pem
-server.crt
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+.circleci
+tests
+*.pem
+*.crt
