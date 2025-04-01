@@ -38,6 +38,9 @@ jobs:
       - run:
           name: Run tests with Jest
           command: npm test
+      - run:
+          name: Audit packages for vulnerabilities
+          command: npm audit
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
