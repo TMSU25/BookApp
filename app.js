@@ -1,25 +1,48 @@
-const express = require("express");
-const path = require("path");
-const bodyParser = require("body-parser");
-const booksRouter = require("./routes/books");
-const fs = require("fs");
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+
+const indexRouter = require('./routes/index');
+const booksRouter = require('./routes/books');
 
 const app = express();
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.static(path.join(__dirname, "public")));
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Home route - Now serves index.ejs
-app.get("/", (req, res) => {
-  const books = JSON.parse(fs.readFileSync("./data/books.json", "utf-8")); // Read latest data
-  res.render("index", { books }); // Render index.ejs with updated books list
+//  Manually set security headers (ZAP scan suggestions)
+app.use((req, res, next) => {
+  res.setHeader("X-Frame-Options", "DENY"); // Prevent clickjacking
+  res.setHeader("X-Content-Type-Options", "nosniff"); // Prevent MIME-type sniffing
+  res.setHeader("X-XSS-Protection", "1; mode=block"); // Enable XSS filtering
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload"); // Enforce HTTPS
+  res.setHeader("Permissions-Policy", "geolocation=(), microphone=()"); // Restrict browser features
+  res.setHeader("Referrer-Policy", "no-referrer"); // Do not send referrer header
+  res.setHeader("Content-Security-Policy", "default-src 'self'"); // Restrict sources of content
+  next();
 });
 
-// Use the booksRouter for all routes related to /books
-app.use("/books", booksRouter);
+app.use('/', indexRouter);
+app.use('/books', booksRouter);
 
-// Export the app
+// Catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+// Error handler
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.send({
+    message: err.message,
+    error: req.app.get('env') === 'development' ? err : {}
+  });
+});
+
 module.exports = app;
