@@ -69,6 +69,10 @@ jobs:
       - run:
           name: start-docker-container
           command: docker start integration_app
+      - run:
+          name: zap-security-scan
+          command: docker run --network host ghcr.io/zaproxy/zaproxy zap-baseline.py -t https://localhost:8443 -config 'scanner.ignore_https_certificates=true'
+
           
   deploy:
     docker:
